@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Post | Tutorbek.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+  <link rel="icon" type="image/png" href="/static/assets/images/icons/javaicon.png" />
+  <style>
+  body {
+    background: #FFFDF1;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  /* ─── CreatePost Dark Mode ─── */
+  /* The dark mode applies uniformly — the editor is NOT styled separately.
+     Everything on this page: body, shell, editor, panels are all the same dark bg. */
+  :root[data-theme="dark"] body {
+    background: #18181A !important;
+    color: #e5e7eb;
+  }
+
+  :root[data-theme="dark"] .editor-shell {
+    background: #18181A !important;
+  }
+
+  :root[data-theme="dark"] .title-input {
+    color: #f3f4f6 !important;
+    caret-color: #c8ff00;
+  }
+
+  :root[data-theme="dark"] .title-input::placeholder {
+    color: #4b5563 !important;
+  }
+
+  :root[data-theme="dark"] .body-editor {
+    color: #d1d5db !important;
+    caret-color: #c8ff00;
+    background: transparent !important;
+  }
+
+  :root[data-theme="dark"] .body-editor:empty::before {
+    color: #4b5563 !important;
+    -webkit-text-fill-color: #4b5563 !important;
+  }
+
+  :root[data-theme="dark"] .body-editor * {
+    color: inherit !important;
+    background: transparent !important;
+    -webkit-text-fill-color: inherit !important;
+  }
+
+  :root[data-theme="dark"] .body-editor a {
+    color: #c8ff00 !important;
+    -webkit-text-fill-color: #c8ff00 !important;
+  }
+
+  :root[data-theme="dark"] .body-editor blockquote {
+    border-left-color: #c8ff00 !important;
+    color: #6b7280 !important;
+    -webkit-text-fill-color: #6b7280 !important;
+  }
+
+  :root[data-theme="dark"] .back-row a {
+    color: #9ca3af !important;
+  }
+
+  :root[data-theme="dark"] .back-row a:hover {
+    color: #f3f4f6 !important;
+  }
+
+  :root[data-theme="dark"] .publish-btn {
+    border-color: #2563eb;
+    background: #1d4ed8 !important;
+    color: #fff !important;
+  }
+
+  :root[data-theme="dark"] .grammar-btn {
+    border-color: #92400e;
+    color: #fcd34d !important;
+    background: transparent !important;
+  }
+
+  :root[data-theme="dark"] .grammar-btn:hover {
+    background: rgba(251, 191, 36, 0.08) !important;
+  }
+
+  :root[data-theme="dark"] .grammar-panel {
+    background: #111 !important;
+    border-color: #422006 !important;
+    color: #fcd34d !important;
+  }
+
+  :root[data-theme="dark"] .grammar-panel-head {
+    color: #f59e0b !important;
+  }
+
+  :root[data-theme="dark"] .grammar-issue {
+    border-bottom-color: #422006 !important;
+  }
+
+  :root[data-theme="dark"] .grammar-panel-close {
+    color: #f59e0b !important;
+  }
+
+  :root[data-theme="dark"] .grammar-panel-close:hover {
+    background: rgba(251, 191, 36, 0.1) !important;
+  }
+
+  :root[data-theme="dark"] .telegram-preview {
+    background: #111 !important;
+    border-color: #262626 !important;
+  }
+
+  :root[data-theme="dark"] .telegram-preview-head {
+    color: #6b7280 !important;
+  }
+
+  :root[data-theme="dark"] .telegram-preview-content {
+    color: #d1d5db !important;
+  }
+
+  :root[data-theme="dark"] .toggle-chip {
+    color: #9ca3af !important;
+  }
+
+  :root[data-theme="dark"] .toggle-slider {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+
+  :root[data-theme="dark"] .toggle-slider::after {
+    background: #6b7280 !important;
+  }
+
+  :root[data-theme="dark"] .toggle-chip input:checked + .toggle-slider {
+    background: #1e3a5f !important;
+    border-color: #2563eb !important;
+  }
+
+  :root[data-theme="dark"] .toggle-chip input:checked + .toggle-slider::after {
+    background: #3b82f6 !important;
+  }
+
+  :root[data-theme="dark"] .preview-toggle-btn {
+    border-color: #374151 !important;
+    color: #9ca3af !important;
+  }
+
+  :root[data-theme="dark"] .send-telegram-toggle-btn {
+    border-color: #374151 !important;
+    color: #9ca3af !important;
+  }
+
+  :root[data-theme="dark"] .dark-mode-toggle-btn {
+    background: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #e5e7eb;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  }
+
+  :root[data-theme="dark"] .status-bar {
+    background: #18181A !important;
+    border-top-color: #27272A !important;
+  }
+
+  .blog-wrap--editor {
+    max-width: 1040px;
+    padding: 50px 250px 100px;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .editor-shell {
+    background: #FFFDF1;
+    border: none;
+    padding: 0;
+  }
+
+  .editor-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: nowrap;
+  }
+
+  .editor-top .back-row {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .editor-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  .publish-btn {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .grammar-btn {
+    border: 1px solid #d97706;
+    background: transparent;
+    color: #92400e;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .grammar-btn:hover {
+    background: #fffbeb;
+  }
+
+  .grammar-btn.checking {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .grammar-panel {
+    display: none;
+    margin: 14px 0 18px;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    background: #fffbeb;
+    padding: 14px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #78350f;
+  }
+
+  .grammar-panel.visible {
+    display: block;
+  }
+
+  .grammar-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: #92400e;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .grammar-panel-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .grammar-accept-all-btn {
+    background: #065f46;
+    color: #fff;
+    border: none;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .grammar-accept-all-btn:hover {
+    background: #047857;
+  }
+
+  .grammar-panel-close {
+    background: none;
+    border: none;
+    color: #92400e;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .grammar-panel-close:hover {
+    background: #fde68a;
+  }
+
+  .grammar-issue {
+    padding: 8px 0;
+    border-bottom: 1px solid #fde68a;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .grammar-issue:last-child {
+    border-bottom: none;
+  }
+
+  .grammar-issue.accepted {
+    opacity: 0.4;
+    text-decoration: line-through;
+    pointer-events: none;
+  }
+
+  .grammar-issue-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .grammar-issue-type {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #b45309;
+    margin-right: 6px;
+  }
+
+  .grammar-issue-preview {
+    display: inline;
+    font-size: 13px;
+    color: #92400e;
+    background: #fef3c7;
+    border-radius: 3px;
+    padding: 0 4px;
+    margin-left: 4px;
+  }
+
+  .grammar-issue-arrow {
+    color: #b45309;
+    margin: 0 4px;
+    font-size: 12px;
+  }
+
+  .grammar-issue-suggestion {
+    display: inline;
+    font-size: 13px;
+    color: #065f46;
+    background: #d1fae5;
+    border-radius: 3px;
+    padding: 0 4px;
+  }
+
+  .grammar-accept-btn {
+    flex-shrink: 0;
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .grammar-accept-btn:hover {
+    background: #a7f3d0;
+  }
+
+  .grammar-ok {
+    color: #065f46;
+    font-size: 14px;
+  }
+
+  /* Qizil chiziq — editorga xato marker */
+  .grammar-error-mark {
+    text-decoration: underline wavy #dc2626;
+    text-decoration-skip-ink: none;
+    text-underline-offset: 3px;
+    background: rgba(220, 38, 38, 0.06);
+    border-radius: 2px;
+  }
+
+
+  .field-flash-error {
+    animation: fieldFlashError 0.65s ease-in-out 2;
+  }
+
+  @keyframes fieldFlashError {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+      border-color: transparent;
+    }
+    50% {
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.25);
+      border-color: #dc2626;
+    }
+  }
+
+  .title-input.field-flash-error {
+    border-radius: 10px;
+    background: rgba(220, 38, 38, 0.04);
+  }
+
+  .body-editor.field-flash-error {
+    border-radius: 10px;
+    background: rgba(220, 38, 38, 0.04);
+  }
+
+  .toggle-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #475569;
+    user-select: none;
+  }
+
+  .toggle-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .toggle-slider {
+    width: 34px;
+    height: 20px;
+    border-radius: 999px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    position: relative;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .toggle-slider::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #64748b;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .toggle-chip input:checked + .toggle-slider {
+    border-color: #2563eb;
+    background: #dbeafe;
+  }
+
+  .toggle-chip input:checked + .toggle-slider::after {
+    transform: translateX(14px);
+    background: #2563eb;
+  }
+
+  .title-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    resize: none;
+    min-height: 44px;
+    overflow: hidden;
+  }
+
+  .title-input::placeholder {
+    color: #b3b3ad;
+  }
+
+  .body-editor {
+    width: 100%;
+    min-height: 420px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-sec);
+    caret-color: var(--accent);
+  }
+
+  .body-editor b,
+  .body-editor strong {
+    font-weight: 700;
+  }
+
+  /* Force editor styling on all children — prevents pasted inline styles */
+  .body-editor * {
+    color: inherit !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    background: transparent !important;
+    -webkit-text-fill-color: inherit !important;
+  }
+
+  .body-editor:empty::before {
+    content: attr(data-placeholder);
+    color: #b3b3ad !important;
+    -webkit-text-fill-color: #b3b3ad !important;
+    pointer-events: none;
+  }
+
+  .body-editor a {
+    color: var(--accent) !important;
+    -webkit-text-fill-color: var(--accent) !important;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .body-editor blockquote {
+    border-left: 2px solid var(--accent);
+    margin: 14px 0;
+    padding: 2px 0 2px 16px;
+    color: var(--muted) !important;
+    -webkit-text-fill-color: var(--muted) !important;
+    font-style: italic;
+  }
+
+  .body-editor.drag-over {
+    outline: 2px dashed #2563eb;
+    outline-offset: 8px;
+    border-radius: 8px;
+  }
+
+  .body-editor .uploaded-image {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+
+  .body-editor .uploaded-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    text-decoration: none;
+    background: #f8fafc !important;
+  }
+
+  .format-popup {
+    position: fixed;
+    display: none;
+    background: #151515;
+    border: 1px solid #303030;
+    border-radius: 8px;
+    padding: 6px 8px;
+    gap: 2px;
+    align-items: center;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    transform: translateY(-8px);
+    white-space: nowrap;
+  }
+
+  .format-popup.visible {
+    display: flex;
+  }
+
+  .fmt-btn {
+    background: none;
+    border: none;
+    color: #f0f0f0;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .fmt-btn:hover {
+    background: #2a2a2a;
+  }
+
+  .fmt-btn.bold {
+    font-weight: 700;
+  }
+
+  .fmt-btn.italic {
+    font-style: italic;
+  }
+
+  .fmt-sep {
+    width: 1px;
+    height: 18px;
+    background: #3a3a3a;
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  .link-popup {
+    position: fixed;
+    display: none;
+    background: #151515;
+    border: 1px solid #303030;
+    border-radius: 8px;
+    padding: 10px 12px;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    transform: translateY(-8px);
+    min-width: 280px;
+  }
+
+  .link-popup.visible {
+    display: flex;
+  }
+
+  .link-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    caret-color: var(--accent);
+  }
+
+  .link-input::placeholder {
+    color: #767676;
+  }
+
+  .link-close {
+    background: none;
+    border: none;
+    color: #9a9a9a;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  .link-close:hover {
+    color: #fff;
+  }
+
+  .editor-side {
+    display: none;
+  }
+
+
+  .preview-toggle-btn,
+  .send-telegram-toggle-btn,
+  .publish-btn {
+    white-space: nowrap;
+  }
+
+  .preview-toggle-btn {
+    border: 1px solid #64748b;
+    background: transparent;
+    color: #334155;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .preview-toggle-btn.active {
+    border-color: #0f766e;
+    background: #ecfeff;
+    color: #0f766e;
+  }
+
+  .send-telegram-toggle-btn {
+    border: 1px solid #475569;
+    background: transparent;
+    color: #334155;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .send-telegram-toggle-btn.active {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  .telegram-preview {
+    display: none;
+    margin: 14px 0 18px;
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+    background: #f8fafc;
+    padding: 14px;
+  }
+
+  .telegram-preview.visible {
+    display: block;
+  }
+
+  .telegram-preview-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .telegram-preview-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #0f172a;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .telegram-preview-content a {
+    color: #2563eb;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .telegram-preview-content b {
+    font-weight: 700;
+  }
+
+  .telegram-preview-content i {
+    font-style: italic;
+  }
+
+  .body-editor .social-embed {
+    margin: 12px 0;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+  }
+
+  .body-editor .social-bookmark,
+  .body-editor .social-bookmark:hover {
+    color: inherit !important;
+    text-decoration: none;
+  }
+
+  .body-editor .social-bookmark__title {
+    text-decoration: none;
+  }
+
+  .body-editor .social-bookmark.is-loading {
+    opacity: 0.85;
+  }
+
+  .body-editor [contenteditable="false"] {
+    caret-color: transparent;
+  }
+
+  @media (max-width: 900px) {
+    .blog-wrap--editor {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .editor-side {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .blog-wrap--editor {
+      padding: 40px 24px 80px;
+    }
+
+    .editor-shell {
+      padding: 0;
+    }
+
+    .editor-top {
+      margin-bottom: 12px;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .editor-top .back-row a {
+      white-space: nowrap;
+    }
+
+    .editor-actions {
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .publish-btn {
+      width: auto;
+      min-width: 82px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 8px 12px;
+      text-align: center;
+      flex-shrink: 0;
+      border-radius: 10px;
+    }
+
+    .body-editor {
+      font-size: 19px;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="blog-wrap blog-wrap--editor">
+  <section id="archive" class="editor-shell">
+    <div class="editor-top">
+      <div class="back-row">
+        <a href="./index.html" class="text-gray-600 hover:text-gray-800 transition-colors inline-block text-lg" aria-label="Back">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+</a>
+      </div>
+      <div class="editor-actions">
+        <label class="toggle-chip" title="Send to Telegram">
+          <span>SentTg</span>
+          <input id="sendToTelegramToggle" type="checkbox" onchange="toggleSendToTelegram(this.checked)" />
+          <span class="toggle-slider" aria-hidden="true"></span>
+        </label>
+        <button class="grammar-btn" onclick="checkGrammar()" title="Grammatikani tekshirish">✓ Check</button>
+        <button class="publish-btn" onclick="publishPost()">Publish</button>
+      </div>
+    </div>
+
+    <textarea
+      class="title-input"
+      placeholder="Title"
+      rows="1"
+      oninput="autoResize(this)"
+      onkeydown="titleKeydown(event)"
+      aria-label="Post title"
+    ></textarea>
+
+    <div
+      class="body-editor"
+      contenteditable="true"
+      data-placeholder="Tell your story..."
+      id="bodyEditor"
+    ></div>
+
+    <div class="grammar-panel" id="grammarPanel">
+      <div class="grammar-panel-head">
+        <span>Tekshiruv natijalari</span>
+        <div class="grammar-panel-head-actions">
+          <button class="grammar-accept-all-btn" id="grammarAcceptAllBtn" onclick="acceptAllGrammarFixes()" style="display:none">✓ Barchasini tuzat</button>
+          <button class="grammar-panel-close" onclick="closeGrammarPanel()" title="Yopish">&#x2715;</button>
+        </div>
+      </div>
+      <div id="grammarPanelContent"></div>
+    </div>
+
+    <div class="telegram-preview" id="telegramPreviewBox">
+      <div class="telegram-preview-head">
+        <span>Telegram Preview</span>
+        <span id="telegramPreviewMeta">-</span>
+      </div>
+      <div class="telegram-preview-content" id="telegramPreviewContent"></div>
+    </div>
+  </section>
+</main>
+
+<div class="format-popup" id="formatPopup">
+  <button class="fmt-btn bold" title="Bold" onclick="fmt('bold')">B</button>
+  <button class="fmt-btn italic" title="Italic" onclick="fmt('italic')"><i>i</i></button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" title="Link" onclick="openLinkPopup()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+      <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+    </svg>
+  </button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" title="Upload image" onclick="openMediaPicker('image')">Img</button>
+  <button class="fmt-btn" title="Upload PDF" onclick="openMediaPicker('pdf')">PDF</button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" title="Uppercase" onclick="fmt('uppercase')" style="font-size: 13px; letter-spacing: .5px;">T</button>
+  <button class="fmt-btn" title="Lowercase" onclick="fmt('lowercase')" style="font-size: 13px; letter-spacing: .5px;">t</button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" title="Quote" onclick="fmt('quote')" style="font-size: 18px; font-family: Georgia, serif;">"</button>
+</div>
+
+<div class="link-popup" id="linkPopup">
+  <input
+    class="link-input"
+    id="linkInput"
+    type="text"
+    placeholder="Paste or type a link..."
+    onkeydown="linkKeydown(event)"
+    autocomplete="off"
+    aria-label="Link URL"
+  />
+  <button class="link-close" onclick="closeLinkPopup()" title="Cancel">&#x2715;</button>
+</div>
+
+<input id="mediaInput" type="file" style="display:none" onchange="handleMediaSelected(event)" />
+
+<script>
+  let savedRange = null;
+  const pageParams = new URLSearchParams(window.location.search);
+  const editSlug = pageParams.get('slug');
+  const isEditMode = !!editSlug;
+  let pendingMediaKind = null;
+  let telegramPreviewEnabled = false;
+  let previewTimer = null;
+  let sendToTelegramEnabled = false;
+  const linkPreviewCache = new Map();
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  function titleKeydown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('bodyEditor').focus();
+    }
+  }
+
+  function getSelectionRect() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return null;
+    return sel.getRangeAt(0).getBoundingClientRect();
+  }
+
+  function positionPopup(popup, rect) {
+    const pw = popup.offsetWidth || 260;
+    const ph = popup.offsetHeight || 52;
+    let left = rect.left + rect.width / 2 - pw / 2;
+    let top = rect.top + window.scrollY - ph - 12;
+
+    left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+    if (top < window.scrollY + 8) top = rect.bottom + window.scrollY + 12;
+
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+  }
+
+  function showFormatPopup() {
+    const rect = getSelectionRect();
+    if (!rect || rect.width === 0) return;
+    const popup = document.getElementById('formatPopup');
+    popup.classList.add('visible');
+    popup.style.left = '-9999px';
+    requestAnimationFrame(() => positionPopup(popup, rect));
+  }
+
+  function hideFormatPopup() {
+    document.getElementById('formatPopup').classList.remove('visible');
+  }
+
+  function saveSelection() {
+    const sel = window.getSelection();
+    const editor = document.getElementById('bodyEditor');
+    if (sel && sel.rangeCount > 0 && editor.contains(sel.anchorNode)) {
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+  }
+
+  function restoreSelection() {
+    if (!savedRange) return false;
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+    return true;
+  }
+
+  function fmt(type) {
+    const editor = document.getElementById('bodyEditor');
+    editor.focus();
+    restoreSelection();
+
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
+
+    if (type === 'bold') {
+      document.execCommand('styleWithCSS', false, false);
+      document.execCommand('bold');
+    }
+
+    if (type === 'italic') document.execCommand('italic');
+
+    if (type === 'uppercase' || type === 'lowercase') {
+      const range = sel.getRangeAt(0);
+      const text = range.toString();
+      const newText = type === 'uppercase' ? text.toUpperCase() : text.toLowerCase();
+      range.deleteContents();
+      range.insertNode(document.createTextNode(newText));
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+
+    if (type === 'quote') {
+      const range = sel.getRangeAt(0);
+      const bq = document.createElement('blockquote');
+      try {
+        range.surroundContents(bq);
+      } catch (e) {
+        bq.textContent = range.toString();
+        range.deleteContents();
+        range.insertNode(bq);
+      }
+      sel.removeAllRanges();
+    }
+
+    saveSelection();
+    hideFormatPopup();
+  }
+
+  function openLinkPopup() {
+    saveSelection();
+    hideFormatPopup();
+
+    const rect = savedRange ? savedRange.getBoundingClientRect() : null;
+    const popup = document.getElementById('linkPopup');
+    const input = document.getElementById('linkInput');
+
+    input.value = '';
+    popup.classList.add('visible');
+    popup.style.left = '-9999px';
+
+    requestAnimationFrame(() => {
+      if (rect) positionPopup(popup, rect);
+      input.focus();
+    });
+  }
+
+  function closeLinkPopup() {
+    document.getElementById('linkPopup').classList.remove('visible');
+    savedRange = null;
+    document.getElementById('bodyEditor').focus();
+  }
+
+  function applyLink() {
+    let url = document.getElementById('linkInput').value.trim();
+    if (!url) {
+      closeLinkPopup();
+      return;
+    }
+
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+    const restored = restoreSelection();
+    document.getElementById('bodyEditor').focus();
+
+    const sel = window.getSelection();
+    if (!restored || !sel || sel.rangeCount === 0 || sel.isCollapsed) {
+      closeLinkPopup();
+      return;
+    }
+
+    const range = sel.getRangeAt(0);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+
+    try {
+      range.surroundContents(anchor);
+    } catch (e) {
+      anchor.textContent = range.toString();
+      range.deleteContents();
+      range.insertNode(anchor);
+    }
+
+    saveSelection();
+    closeLinkPopup();
+  }
+
+  function linkKeydown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      applyLink();
+    }
+    if (e.key === 'Escape') closeLinkPopup();
+  }
+
+  document.addEventListener('selectionchange', () => {
+    const sel = window.getSelection();
+    const editor = document.getElementById('bodyEditor');
+
+    if (!sel || !editor.contains(sel.anchorNode)) {
+      if (!document.getElementById('linkPopup').classList.contains('visible')) {
+        hideFormatPopup();
+      }
+      return;
+    }
+
+    saveSelection();
+
+    if (sel.isCollapsed) {
+      if (!document.getElementById('linkPopup').classList.contains('visible')) {
+        hideFormatPopup();
+      }
+      return;
+    }
+
+    if (!document.getElementById('linkPopup').classList.contains('visible')) {
+      showFormatPopup();
+    }
+  });
+
+  document.getElementById('formatPopup').addEventListener('mousedown', (e) => {
+    e.preventDefault();
+  });
+
+  document.getElementById('bodyEditor').addEventListener('click', (e) => {
+    const anchor = e.target.closest('a');
+    if (!anchor) return;
+    e.preventDefault();
+    window.open(anchor.href, '_blank', 'noopener,noreferrer');
+  });
+
+  function setSendToTelegramState(enabled) {
+    sendToTelegramEnabled = Boolean(enabled);
+    const input = document.getElementById('sendToTelegramToggle');
+    if (input) input.checked = sendToTelegramEnabled;
+  }
+
+  function currentEditorPayload() {
+    const title = document.querySelector('.title-input').value.trim();
+    const bodyEditor = document.getElementById('bodyEditor');
+    return {
+      title,
+      bodyHtml: bodyEditor.innerHTML.trim(),
+      bodyText: bodyEditor.innerText.trim(),
+      slug: editSlug || undefined,
+      sendToTelegram: sendToTelegramEnabled,
+    };
+  }
+
+  async function refreshTelegramPreview() {
+    if (!telegramPreviewEnabled) return;
+
+    const previewBox = document.getElementById('telegramPreviewBox');
+    const previewContent = document.getElementById('telegramPreviewContent');
+    const previewMeta = document.getElementById('telegramPreviewMeta');
+    previewBox.classList.add('visible');
+    previewContent.textContent = 'Loading...';
+
+    try {
+      const response = await fetch('/api/telegram/preview', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(currentEditorPayload()),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.error || 'Preview xatoligi');
+      }
+
+      previewContent.innerHTML = payload.text || '';
+      previewMeta.textContent = `Len: ${payload.length || 0}${payload.usedReadMore ? ' | ReadMore' : ''}`;
+    } catch (error) {
+      previewContent.textContent = 'Error: ' + (error.message || 'Preview xatoligi');
+      previewMeta.textContent = 'Error';
+    }
+  }
+
+  function queueTelegramPreviewRefresh() {
+    if (!telegramPreviewEnabled) return;
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => {
+      refreshTelegramPreview();
+    }, 260);
+  }
+
+  function toggleTelegramPreview(forceValue) {
+    telegramPreviewEnabled = typeof forceValue === 'boolean' ? forceValue : !telegramPreviewEnabled;
+    const input = document.getElementById('tgPreviewToggle');
+    const box = document.getElementById('telegramPreviewBox');
+
+    if (input) input.checked = telegramPreviewEnabled;
+    if (!telegramPreviewEnabled) {
+      box.classList.remove('visible');
+      return;
+    }
+
+    refreshTelegramPreview();
+  }
+
+  function toggleSendToTelegram(forceValue) {
+    setSendToTelegramState(typeof forceValue === 'boolean' ? forceValue : !sendToTelegramEnabled);
+  }
+
+  async function loadPostForEdit() {
+    if (!isEditMode) return;
+
+    const publishBtn = document.querySelector('.publish-btn');
+    const titleInput = document.querySelector('.title-input');
+    const bodyEditor = document.getElementById('bodyEditor');
+    publishBtn.textContent = 'Update';
+
+    try {
+      const response = await fetch('/api/posts/' + encodeURIComponent(editSlug), {
+        credentials: 'same-origin',
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Postni yuklashda xatolik');
+      }
+
+      titleInput.value = payload.title || '';
+      autoResize(titleInput);
+      bodyEditor.innerHTML = payload.bodyHtml || '';
+      setSendToTelegramState(Boolean(payload.sendToTelegram));
+      queueTelegramPreviewRefresh();
+    } catch (error) {
+      alert('Error: ' + (error.message || 'Postni yuklashda xatolik'));
+    }
+  }
+
+  function triggerFieldFlash(element) {
+    if (!element) return;
+    element.classList.remove('field-flash-error');
+    // Force reflow so repeated clicks replay the animation.
+    void element.offsetWidth;
+    element.classList.add('field-flash-error');
+    setTimeout(() => {
+      element.classList.remove('field-flash-error');
+    }, 1400);
+  }
+
+  /* ─── Grammar Check (faqat punctuation) ─── */
+
+  let grammarIssues = [];
+
+  function closeGrammarPanel() {
+    document.getElementById('grammarPanel').classList.remove('visible');
+    clearGrammarMarks();
+    grammarIssues = [];
+  }
+
+  function clearGrammarMarks() {
+    const editor = document.getElementById('bodyEditor');
+    editor.querySelectorAll('.grammar-error-mark').forEach(mark => {
+      const parent = mark.parentNode;
+      while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+      parent.removeChild(mark);
+    });
+    editor.normalize();
+  }
+
+  /**
+   * Editor ichidagi text node larni topib, ulardan so'z bo'yicha xatolarni belgilash.
+   * Har bir xato <span class="grammar-error-mark"> bilan o'raladi.
+   */
+  function markErrorsInEditor(issues) {
+    const editor = document.getElementById('bodyEditor');
+    const titleInput = document.querySelector('.title-input');
+
+    // Title uchun flash
+    issues.forEach(issue => {
+      if (issue.target === 'title') {
+        triggerFieldFlash(titleInput);
+      }
+    });
+
+    // Body ichidagi text-based xatolarni mark qilish
+    const textIssues = issues.filter(i => i.markPattern && i.target === 'body');
+    if (textIssues.length === 0) return;
+
+    // Hamma text nodelarni yig'ish
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (parent && parent.closest('[contenteditable="false"], .grammar-error-mark')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    // Har bir textNode da pattern izlash
+    textIssues.forEach(issue => {
+      const regex = new RegExp(issue.markPattern, issue.markFlags || 'g');
+      const cssClass = issue.markClass || 'grammar-error-mark';
+
+      // textNodes ro'yxati har gal o'zgarishi mumkin, shuning uchun nusxa olamiz
+      const snapshot = [...textNodes];
+      snapshot.forEach(textNode => {
+        if (!textNode.parentNode) return; // already removed
+        const text = textNode.nodeValue || '';
+        let match;
+        regex.lastIndex = 0;
+        const fragments = [];
+        let lastIdx = 0;
+
+        while ((match = regex.exec(text)) !== null) {
+          if (match.index > lastIdx) {
+            fragments.push(document.createTextNode(text.slice(lastIdx, match.index)));
+          }
+          const span = document.createElement('span');
+          span.className = cssClass;
+          span.textContent = match[0];
+          fragments.push(span);
+          lastIdx = match.index + match[0].length;
+        }
+
+        if (fragments.length > 0) {
+          if (lastIdx < text.length) {
+            fragments.push(document.createTextNode(text.slice(lastIdx)));
+          }
+          const frag = document.createDocumentFragment();
+          fragments.forEach(f => frag.appendChild(f));
+          textNode.parentNode.replaceChild(frag, textNode);
+        }
+      });
+    });
+  }
+
+
+  function checkGrammar() {
+    const btn = document.querySelector('.grammar-btn');
+    const titleInput = document.querySelector('.title-input');
+    const bodyEditor = document.getElementById('bodyEditor');
+    const panel = document.getElementById('grammarPanel');
+    const content = document.getElementById('grammarPanelContent');
+    const acceptAllBtn = document.getElementById('grammarAcceptAllBtn');
+
+    const title = titleInput.value.trim();
+    const bodyText = bodyEditor.innerText.trim();
+    const fullText = (title ? title + '\n' : '') + bodyText;
+
+    if (!fullText.trim()) {
+      content.innerHTML = '<div class="grammar-issue"><div class="grammar-issue-body">Tekshirish uchun matn yozing.</div></div>';
+      panel.classList.add('visible');
+      acceptAllBtn.style.display = 'none';
+      return;
+    }
+
+    btn.classList.add('checking');
+    btn.textContent = '⏳ Checking...';
+
+    // Oldingi mark larni tozalash
+    clearGrammarMarks();
+
+    setTimeout(() => {
+      grammarIssues = runGrammarChecks(fullText, title, bodyText);
+
+      if (grammarIssues.length === 0) {
+        content.innerHTML = '<div class="grammar-ok">✅ Xatolik topilmadi! Matn toza ko\'rinadi.</div>';
+        acceptAllBtn.style.display = 'none';
+      } else {
+        const fixableCount = grammarIssues.filter(i => i.fixAction).length;
+        acceptAllBtn.style.display = fixableCount > 0 ? 'inline-block' : 'none';
+        renderGrammarIssues();
+        // Editorga qizil chiziq qo'shish
+        markErrorsInEditor(grammarIssues);
+      }
+
+      panel.classList.add('visible');
+      btn.classList.remove('checking');
+      btn.textContent = '✓ Check';
+    }, 150);
+  }
+
+  function renderGrammarIssues() {
+    const content = document.getElementById('grammarPanelContent');
+    content.innerHTML = grammarIssues.map((issue, idx) => `
+      <div class="grammar-issue" id="grammarIssue${idx}">
+        <div class="grammar-issue-body">
+          <span class="grammar-issue-type">${escapeHtml(issue.type)}</span>
+          ${escapeHtml(issue.message)}
+          ${issue.fixAction ? `
+            <br>
+            <span class="grammar-issue-preview">${escapeHtml(issue.fixAction.from || '')}</span>
+            <span class="grammar-issue-arrow">→</span>
+            <span class="grammar-issue-suggestion">${escapeHtml(issue.fixAction.to || '')}</span>
+          ` : ''}
+        </div>
+        ${issue.fixAction ? `
+          <button class="grammar-accept-btn" onclick="acceptGrammarFix(${idx})">Tuzat</button>
+        ` : ''}
+      </div>
+    `).join('');
+  }
+
+  function acceptGrammarFix(idx) {
+    const issue = grammarIssues[idx];
+    if (!issue || !issue.fixAction) return;
+
+    const action = issue.fixAction;
+
+    if (action.target === 'title') {
+      const titleInput = document.querySelector('.title-input');
+      titleInput.value = action.applyFn(titleInput.value);
+      autoResize(titleInput);
+    } else if (action.target === 'body') {
+      const editor = document.getElementById('bodyEditor');
+      clearGrammarMarks();
+      if (action.applyFn) {
+        action.applyFn(editor);
+      } else {
+        applyTextReplace(editor, action.from, action.to);
+      }
+    }
+
+    // Issue ni accepted deb belgilash
+    const el = document.getElementById('grammarIssue' + idx);
+    if (el) el.classList.add('accepted');
+    issue.fixAction = null;
+
+    const fixableCount = grammarIssues.filter(i => i.fixAction).length;
+    if (fixableCount === 0) {
+      document.getElementById('grammarAcceptAllBtn').style.display = 'none';
+    }
+
+    const remaining = grammarIssues.filter((i, iIdx) => iIdx !== idx && i.markPattern);
+    clearGrammarMarks();
+    markErrorsInEditor(remaining);
+
+    queueTelegramPreviewRefresh();
+  }
+
+  function applyTextReplace(editor, from, to) {
+    // TreeWalker bilan text nodelarni topib, ulardan replace qilish
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    for (const node of nodes) {
+      if (node.nodeValue && node.nodeValue.includes(from)) {
+        node.nodeValue = node.nodeValue.replace(from, to);
+        return; // faqat birinchi topilganini almashtirish
+      }
+    }
+
+    // Agar text node da topilmasa, title bo'lishi mumkin
+    // Yoki innerHTML dan foydalanish
+    const html = editor.innerHTML;
+    if (html.includes(escapeHtml(from))) {
+      editor.innerHTML = html.replace(escapeHtml(from), escapeHtml(to));
+    }
+  }
+
+  /**
+   * Uzun paragraflarni gaplar bo'yicha bo'lib qo'yish.
+   * Har 2-3 gapdan keyin yangi paragraf hosil qiladi.
+   * contenteditable ichida ishlaydi (innerHTML bilan).
+   */
+  function splitLongParagraphs(editor) {
+    // Editor dagi top-level bloklarni yig'amiz
+    const blocks = Array.from(editor.childNodes);
+
+    blocks.forEach(block => {
+      // Faqat uzun text bloklarni bo'lamiz
+      const text = (block.textContent || '').trim();
+      if (text.length <= 500) return;
+
+      // Gaplarni ajratish
+      const sentences = splitIntoSentences(text);
+      if (sentences.length < 3) return; // 2 ta gapni bo'lishning ma'nosi yo'q
+
+      // Har ~3 gapdan keyin bo'lamiz
+      const chunkSize = 3;
+      const chunks = [];
+      for (let i = 0; i < sentences.length; i += chunkSize) {
+        const chunk = sentences.slice(i, i + chunkSize).join(' ').trim();
+        if (chunk) chunks.push(chunk);
+      }
+
+      if (chunks.length <= 1) return;
+
+      // Yangi paragraflar yaratamiz
+      const frag = document.createDocumentFragment();
+      chunks.forEach(chunk => {
+        const p = document.createElement('p');
+        p.textContent = chunk;
+        frag.appendChild(p);
+      });
+
+      block.replaceWith(frag);
+    });
+  }
+
+  /**
+   * Matnni gaplarga bo'lish.
+   * .!? dan keyin bo'shliq + bosh harf bo'lsa gap tugagan deb hisoblaymiz.
+   */
+  function splitIntoSentences(text) {
+    const sentences = [];
+    // Gap ajratgich: .!? dan keyin bo'shliq(lar), yoki matn oxiri
+    const regex = /[^.!?]*[.!?]+[\s]*/g;
+    let match;
+    let lastIndex = 0;
+
+    while ((match = regex.exec(text)) !== null) {
+      sentences.push(match[0].trim());
+      lastIndex = regex.lastIndex;
+    }
+
+    // Oxirgi qism (nuqta yo'q bo'lsa)
+    const remaining = text.slice(lastIndex).trim();
+    if (remaining) {
+      sentences.push(remaining);
+    }
+
+    return sentences.filter(s => s.length > 0);
+  }
+
+  function acceptAllGrammarFixes() {
+    const titleInput = document.querySelector('.title-input');
+    const editor = document.getElementById('bodyEditor');
+
+    clearGrammarMarks();
+
+    // Avval title fixlarni, keyin body fixlarni bajaramiz
+    grammarIssues.forEach((issue) => {
+      if (!issue.fixAction) return;
+      const action = issue.fixAction;
+
+      if (action.target === 'title' && action.applyFn) {
+        titleInput.value = action.applyFn(titleInput.value);
+        autoResize(titleInput);
+      }
+    });
+
+    // Body fixlarni bajaramiz — har safar yangi text dan izlaymiz
+    grammarIssues.forEach((issue, idx) => {
+      if (!issue.fixAction) return;
+      const action = issue.fixAction;
+
+      if (action.target === 'body') {
+        if (action.applyFn) {
+          action.applyFn(editor);
+        } else {
+          applyTextReplace(editor, action.from, action.to);
+        }
+      }
+
+      const el = document.getElementById('grammarIssue' + idx);
+      if (el) el.classList.add('accepted');
+      issue.fixAction = null;
+    });
+
+    document.getElementById('grammarAcceptAllBtn').style.display = 'none';
+    queueTelegramPreviewRefresh();
+  }
+
+  function runGrammarChecks(fullText, title, bodyText) {
+    const issues = [];
+    const seen = new Set(); // dublikatlarni oldini olish
+
+    function addIssue(issue) {
+      const key = issue.type + '|' + (issue.fixAction ? issue.fixAction.from : issue.message);
+      if (seen.has(key)) return;
+      seen.add(key);
+      issues.push(issue);
+    }
+
+    // ── TITLE tekshiruvlari ──
+    if (title) {
+      if (/^[a-zA-Zа-яА-ЯёЁa-z\u0400-\u04FF]/.test(title) && title[0] === title[0].toLowerCase()) {
+        const fixed = title[0].toUpperCase() + title.slice(1);
+        addIssue({
+          type: 'TITLE',
+          message: 'Sarlavha bosh harf bilan boshlanishi kerak.',
+          target: 'title',
+          fixAction: { target: 'title', from: title, to: fixed, applyFn: () => fixed },
+        });
+      }
+      if (title.endsWith('.')) {
+        const fixed = title.slice(0, -1);
+        addIssue({
+          type: 'TITLE',
+          message: 'Sarlavha oxirida nuqta qo\'yilmasligi kerak.',
+          target: 'title',
+          fixAction: { target: 'title', from: title, to: fixed, applyFn: () => fixed },
+        });
+      }
+    }
+
+    // ── 1. Tinish belgisidan OLDIN bo'shliq bor (xato) ──
+    // "bekzod ,bugun" → "bekzod, bugun"
+    // "sezmaymiz .keyin" → "sezmaymiz. Keyin"
+    const spaceBeforePunct = [...bodyText.matchAll(/(\S)([ \t]+)([.,;:!?])/g)];
+    spaceBeforePunct.forEach(m => {
+      const original = m[0];
+      const charBefore = m[1];
+      const punctuation = m[3];
+      // Nuqta/so'roq/undov dan keyin bosh harf qoidasi keyingi qoidada tekshiriladi
+      const fixed = charBefore + punctuation;
+      addIssue({
+        type: 'BO\'SHLIQ',
+        message: `Tinish belgisidan oldin bo'shliq xato: "${original}"`,
+        target: 'body',
+        markPattern: original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: 'g',
+        fixAction: { target: 'body', from: original, to: fixed },
+      });
+    });
+
+    // ── 2. Tinish belgisidan KEYIN bo'shliq yo'q ──
+    // "ishlaydi,lekin" → "ishlaydi, lekin"
+    // "nega?kim" → "nega? Kim"  (so'roq/undov/nuqta dan keyin bosh harf)
+    const noSpaceAfterPunct = [...bodyText.matchAll(/([.!?,;:])([A-Za-zA-Ya-яёЁўқғҳa-z\u0400-\u04FF])/g)];
+    noSpaceAfterPunct.forEach(m => {
+      const original = m[0];
+      const punct = m[1];
+      const nextChar = m[2];
+      const needsCapital = /[.!?]/.test(punct);
+      const fixedChar = needsCapital ? nextChar.toUpperCase() : nextChar;
+      const fixed = punct + ' ' + fixedChar;
+      addIssue({
+        type: 'TINISH',
+        message: `Belgidan keyin bo'shliq kerak: "${original}"`,
+        target: 'body',
+        markPattern: original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: 'g',
+        fixAction: { target: 'body', from: original, to: fixed },
+      });
+    });
+
+    // ── 3. Nuqta/so'roq/undov dan keyin bo'shliq bor, lekin kichik harf ──
+    // "nega? kim" → "nega? Kim"
+    const lowAfterEnd = [...bodyText.matchAll(/([.!?])(\s+)([a-zа-яёўқғҳ])/g)];
+    lowAfterEnd.forEach(m => {
+      const original = m[0];
+      const punct = m[1];
+      const nextChar = m[3];
+      const fixed = punct + ' ' + nextChar.toUpperCase();
+      addIssue({
+        type: 'BOSH HARF',
+        message: `Gap bosh harf bilan boshlanishi kerak: "…${original.trim()}"`,
+        target: 'body',
+        markPattern: original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: 'g',
+        fixAction: { target: 'body', from: original, to: fixed },
+      });
+    });
+
+    // ── 4. Ortiqcha bo'shliqlar (2+ ketma-ket) ──
+    const multiSpaces = [...bodyText.matchAll(/([ \t]{2,})/g)];
+    multiSpaces.forEach(m => {
+      const original = m[0];
+      addIssue({
+        type: 'BO\'SHLIQ',
+        message: `Ortiqcha bo'shliq (${original.length} ta ketma-ket).`,
+        target: 'body',
+        markPattern: original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: 'g',
+        fixAction: { target: 'body', from: original, to: ' ' },
+      });
+    });
+
+    // ── 5. Takroriy tinish belgilari (,, !! ?? lekin ... ni o'tkazamiz) ──
+    const repeatPunct = [...bodyText.matchAll(/([,!?;:])\1+/g)];
+    repeatPunct.forEach(m => {
+      addIssue({
+        type: 'TINISH',
+        message: `Takroriy tinish belgisi: "${m[0]}"`,
+        target: 'body',
+        markPattern: m[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: 'g',
+        fixAction: { target: 'body', from: m[0], to: m[1] },
+      });
+    });
+
+    // ── 6. Yopiluvchi qavs ) dan keyin bo'shliq yo'q ──
+    // ":)o'ylab" → ":) o'ylab"
+    const noSpaceAfterParen = [...bodyText.matchAll(/\)([A-Za-zA-Ya-яёЁўқғҳ\u0400-\u04FF])/g)];
+    noSpaceAfterParen.forEach(m => {
+      const original = m[0];
+      const fixed = ') ' + m[1];
+      addIssue({
+        type: 'BO\'SHLIQ',
+        message: `Qavsdan keyin bo'shliq kerak: "${original}"`,
+        target: 'body',
+        markPattern: original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: 'g',
+        fixAction: { target: 'body', from: original, to: fixed },
+      });
+    });
+
+    // ── 7. Backtick o'rniga apostrof ──
+    const backticks = [...bodyText.matchAll(/\u0060/g)];
+    if (backticks.length > 0) {
+      addIssue({
+        type: 'BELGI',
+        message: "Backtick (`) o'rniga apostrof (') ishlating.",
+        target: 'body',
+        markPattern: '\u0060',
+        markFlags: 'g',
+        fixAction: { target: 'body', from: '`', to: "'" },
+      });
+    }
+
+    // ── 8. Nuqtadan keyin yopilgan bo'shliq + kichik harf (bo'shliqsiz) ──
+    // "sezmaymiz .keyin" allaqachon #1 da ushlandi
+    // Lekin ".keyin" (nuqtadan keyin bo'shliqsiz kichik) ham tekshiramiz
+    // Bu #2 da allaqachon bor, shuning uchun bu qo'shimcha tekshiruv
+
+    // ── 9. Matn boshida bosh harf ──
+    if (bodyText.length > 0 && /^[a-zа-яёўқғҳ]/.test(bodyText)) {
+      const firstChar = bodyText[0];
+      const fixed = firstChar.toUpperCase();
+      addIssue({
+        type: 'BOSH HARF',
+        message: 'Matn bosh harf bilan boshlanishi kerak.',
+        target: 'body',
+        markPattern: '^' + firstChar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        markFlags: '',
+        fixAction: { target: 'body', from: firstChar, to: fixed },
+      });
+    }
+
+    // ── 10. Matn oxirida tinish belgisi yo'q ──
+    const trimmed = bodyText.replace(/\s+$/, '');
+    if (trimmed.length > 10 && !/[.!?…]$/.test(trimmed)) {
+      addIssue({
+        type: 'YAKUNLASH',
+        message: 'Matn tinish belgisi bilan tugamagan (nuqta, undov yoki so\'roq belgisi qo\'ying).',
+        target: 'body',
+        fixAction: null,
+      });
+    }
+
+    // ── 11. Juda ko'p bo'sh qatorlar (3+) ──
+    const excessiveNewlines = bodyText.match(/\n{4,}/g);
+    if (excessiveNewlines) {
+      addIssue({
+        type: 'FORMAT',
+        message: `${excessiveNewlines.length} joyda juda ko'p bo'sh qator bor (3+ ketma-ket).`,
+        target: 'body',
+        fixAction: null,
+      });
+    }
+
+    // ── 12. Juda uzun paragraflar (500+ belgi) ──
+    const paragraphs = bodyText.split(/\n\s*\n/);
+    const longParas = paragraphs.filter(p => p.trim().length > 500);
+    if (longParas.length > 0) {
+      addIssue({
+        type: 'FORMAT',
+        message: `${longParas.length} ta juda uzun paragraf bor. O'qish qulayligi uchun bo'lib yozing.`,
+        target: 'body',
+        fixAction: {
+          target: 'body',
+          from: '',
+          to: '',
+          applyFn: function(editor) { splitLongParagraphs(editor); },
+        },
+      });
+    }
+
+    return issues;
+  }
+
+  async function publishPost() {
+    const publishBtn = document.querySelector('.publish-btn');
+    const titleInput = document.querySelector('.title-input');
+    const title = titleInput.value.trim();
+    const bodyEditor = document.getElementById('bodyEditor');
+
+    linkifyUrlsInEditor();
+
+    const bodyText = bodyEditor.innerText.trim();
+    const bodyHtml = bodyEditor.innerHTML.trim();
+
+    let hasError = false;
+    if (!title) {
+      triggerFieldFlash(titleInput);
+      hasError = true;
+    }
+    if (!bodyText) {
+      triggerFieldFlash(bodyEditor);
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+
+    publishBtn.disabled = true;
+    publishBtn.textContent = isEditMode ? 'Updating...' : 'Publishing...';
+
+    try {
+      const endpoint = isEditMode
+        ? '/api/posts/' + encodeURIComponent(editSlug)
+        : '/api/publish';
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const response = await fetch(endpoint, {
+        method,
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          bodyHtml,
+          bodyText,
+          sendToTelegram: sendToTelegramEnabled,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Publish failed');
+      }
+
+      const targetHref = payload.href || ('/blog/' + (payload.slug || editSlug || '') + '/');
+      window.location.assign(targetHref);
+    } catch (error) {
+      alert('Error: ' + (error.message || 'Publish failed'));
+    } finally {
+      publishBtn.disabled = false;
+      publishBtn.textContent = isEditMode ? 'Update' : 'Publish';
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (ch) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[ch]));
+  }
+
+  function getFileExtension(fileName) {
+    const match = String(fileName || '').toLowerCase().match(/\.([a-z0-9]+)$/);
+    return match ? match[1] : '';
+  }
+
+  function inferFileKind(file, preferredKind) {
+    if (preferredKind) return preferredKind;
+    const ext = getFileExtension(file.name);
+    if (file.type === 'application/pdf' || file.type === 'application/x-pdf' || ext === 'pdf') {
+      return 'pdf';
+    }
+    if (file.type.startsWith('image/')) {
+      return 'image';
+    }
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) {
+      return 'image';
+    }
+    return '';
+  }
+
+  function openMediaPicker(kind) {
+    pendingMediaKind = kind;
+    saveSelection();
+    const mediaInput = document.getElementById('mediaInput');
+    mediaInput.value = '';
+    mediaInput.accept = kind === 'pdf' ? 'application/pdf,.pdf' : 'image/*';
+    mediaInput.click();
+  }
+
+  async function readFileAsDataUrl(file) {
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error('Faylni o\'qib bo\'lmadi'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function insertMediaAtCursor(kind, url, fileName) {
+    const editor = document.getElementById('bodyEditor');
+    editor.focus();
+    restoreSelection();
+
+    if (kind === 'image') {
+      document.execCommand('insertHTML', false, `<p><img class="uploaded-image" src="${escapeHtml(url)}" alt="${escapeHtml(fileName)}" /></p>`);
+      return;
+    }
+
+    const linkText = fileName || 'PDF file';
+    document.execCommand('insertHTML', false, `<p><a class="uploaded-pdf" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">📄 ${escapeHtml(linkText)}</a></p>`);
+  }
+
+  async function uploadSelectedMedia(file, forcedKind) {
+    const kind = inferFileKind(file, forcedKind);
+    if (!kind) {
+      alert('Faqat rasm yoki PDF yuklash mumkin');
+      return;
+    }
+
+    if (forcedKind === 'pdf' && kind !== 'pdf') {
+      alert('Faqat PDF tanlang');
+      return;
+    }
+
+    if (forcedKind === 'image' && kind !== 'image') {
+      alert('Faqat rasm tanlang');
+      return;
+    }
+
+    const dataUrl = await readFileAsDataUrl(file);
+    const response = await fetch('/api/media/upload', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fileName: file.name,
+        dataUrl,
+      }),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(payload.error || 'Upload xatoligi');
+    }
+
+    insertMediaAtCursor(payload.kind || kind, payload.url, file.name);
+    saveSelection();
+  }
+
+  async function handleMediaSelected(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    try {
+      await uploadSelectedMedia(file, pendingMediaKind);
+    } catch (error) {
+      alert('Error: ' + (error.message || 'Upload xatoligi'));
+    } finally {
+      pendingMediaKind = null;
+      event.target.value = '';
+    }
+  }
+
+  function setupDragAndDrop() {
+    const editor = document.getElementById('bodyEditor');
+
+    const onDragOver = (event) => {
+      event.preventDefault();
+      editor.classList.add('drag-over');
+    };
+
+    const onDragLeave = (event) => {
+      if (event.target === editor || !editor.contains(event.relatedTarget)) {
+        editor.classList.remove('drag-over');
+      }
+    };
+
+    const onDrop = async (event) => {
+      event.preventDefault();
+      editor.classList.remove('drag-over');
+      saveSelection();
+
+      const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+      if (!file) return;
+
+      try {
+        await uploadSelectedMedia(file, null);
+      } catch (error) {
+        alert('Error: ' + (error.message || 'Upload xatoligi'));
+      }
+    };
+
+    editor.addEventListener('dragover', onDragOver);
+    editor.addEventListener('dragleave', onDragLeave);
+    editor.addEventListener('drop', onDrop);
+  }
+
+  document.querySelector('.title-input').addEventListener('input', () => {
+    queueTelegramPreviewRefresh();
+  });
+
+  document.getElementById('bodyEditor').addEventListener('input', () => {
+    queueTelegramPreviewRefresh();
+  });
+
+  function normalizeUrlToken(raw) {
+    const value = String(raw || '').trim();
+    if (!value) return '';
+    if (/^https?:\/\//i.test(value)) return value;
+    if (/^www\./i.test(value)) return `https://${value}`;
+    return '';
+  }
+
+  function parseUrlSafe(value) {
+    try {
+      return new URL(String(value || '').trim());
+    } catch {
+      return null;
+    }
+  }
+
+  function normalizeHost(value) {
+    return String(value || '').toLowerCase().replace(/^www\./, '');
+  }
+
+  function getYouTubeEmbedUrl(urlObj) {
+    const host = normalizeHost(urlObj.hostname);
+    let videoId = '';
+
+    if (host === 'youtu.be') {
+      videoId = urlObj.pathname.split('/').filter(Boolean)[0] || '';
+    } else if (host.endsWith('youtube.com')) {
+      if (urlObj.pathname === '/watch') {
+        videoId = urlObj.searchParams.get('v') || '';
+      } else {
+        const segments = urlObj.pathname.split('/').filter(Boolean);
+        if (segments[0] === 'shorts' || segments[0] === 'embed' || segments[0] === 'live') {
+          videoId = segments[1] || '';
+        }
+      }
+    }
+
+    if (!videoId) return '';
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+
+  function getCurrentEditorBlock(editor, node) {
+    let current = node && node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    while (current && current !== editor) {
+      if (current.parentElement === editor) return current;
+      current = current.parentElement;
+    }
+    return editor;
+  }
+
+  function extractStandaloneUrlText(block, editor) {
+    if (!block) return null;
+
+    if (block === editor) {
+      if (editor.children.length > 0) return null;
+      const rawEditorText = (editor.textContent || '').trim();
+      const normalizedEditorUrl = normalizeUrlToken(rawEditorText.replace(/[),.;!?]+$/, ''));
+      if (!normalizedEditorUrl) return null;
+      return { url: normalizedEditorUrl, raw: rawEditorText };
+    }
+
+    const anchors = block.querySelectorAll('a[href]');
+    if (anchors.length > 1) return null;
+
+    if (anchors.length === 1) {
+      const anchor = anchors[0];
+      const blockText = (block.textContent || '').trim();
+      const anchorText = (anchor.textContent || '').trim();
+      if (!blockText || blockText !== anchorText) return null;
+      const cleanHref = normalizeUrlToken((anchor.getAttribute('href') || '').replace(/[),.;!?]+$/, ''));
+      if (!cleanHref) return null;
+      return { url: cleanHref, raw: anchorText || cleanHref };
+    }
+
+    const raw = (block.textContent || '').trim();
+    if (!raw) return null;
+
+    const match = raw.match(/^(https?:\/\/\S+|www\.\S+)$/i);
+    if (!match) return null;
+
+    const clean = match[1].replace(/[),.;!?]+$/, '');
+    const normalized = normalizeUrlToken(clean);
+    if (!normalized) return null;
+
+    return { url: normalized, raw: clean };
+  }
+
+  function createEditorSpacerParagraph() {
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(document.createElement('br'));
+    return paragraph;
+  }
+
+  function placeCaretAtStart(element) {
+    if (!element) return;
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(true);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function replaceBlockWithInlineEmbed(editor, block, embedNode) {
+    const spacer = createEditorSpacerParagraph();
+
+    if (block && block !== editor) {
+      block.replaceWith(embedNode, spacer);
+    } else {
+      editor.innerHTML = '';
+      editor.appendChild(embedNode);
+      editor.appendChild(spacer);
+    }
+
+    placeCaretAtStart(spacer);
+    saveSelection();
+  }
+
+  function createYouTubeEmbedNode(embedUrl, sourceUrl) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'social-embed social-embed--video';
+    wrapper.setAttribute('contenteditable', 'false');
+
+    const frame = document.createElement('iframe');
+    frame.src = embedUrl;
+    if (sourceUrl) {
+      frame.setAttribute('data-source-url', sourceUrl);
+    }
+    frame.loading = 'lazy';
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.allowFullscreen = true;
+    frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    frame.title = 'YouTube embed';
+
+    wrapper.appendChild(frame);
+    return wrapper;
+  }
+
+  function createBookmarkNode({ url, title, favicon, image, loading }) {
+    const parsed = parseUrlSafe(url);
+    const host = parsed ? normalizeHost(parsed.hostname) : '';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'social-embed social-embed--bookmark';
+    wrapper.setAttribute('contenteditable', 'false');
+
+    const card = document.createElement('a');
+    card.className = 'social-bookmark' + (loading ? ' is-loading' : '');
+    card.href = url;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+
+    if (image) {
+      const imageEl = document.createElement('img');
+      imageEl.className = 'social-bookmark__thumb';
+      imageEl.loading = 'lazy';
+      imageEl.alt = '';
+      imageEl.src = image;
+      card.appendChild(imageEl);
+    }
+
+    const titleEl = document.createElement('span');
+    titleEl.className = 'social-bookmark__title';
+    titleEl.textContent = title || host || url;
+
+    const row = document.createElement('span');
+    row.className = 'social-bookmark__row';
+
+    const icon = document.createElement('img');
+    icon.className = 'social-bookmark__icon';
+    icon.loading = 'lazy';
+    icon.alt = '';
+    icon.src = favicon || (parsed ? `${parsed.origin}/favicon.ico` : '');
+
+    const meta = document.createElement('span');
+    meta.className = 'social-bookmark__meta';
+    meta.textContent = url;
+
+    row.appendChild(icon);
+    row.appendChild(meta);
+    card.appendChild(titleEl);
+    card.appendChild(row);
+    wrapper.appendChild(card);
+
+    return wrapper;
+  }
+
+  async function fetchLinkPreview(url) {
+    if (linkPreviewCache.has(url)) {
+      return linkPreviewCache.get(url);
+    }
+
+    const response = await fetch('/api/link-preview', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url }),
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(payload.error || 'Link preview xatoligi');
+    }
+
+    const preview = {
+      url: payload.url || url,
+      title: payload.title || url,
+      favicon: payload.favicon || '',
+      image: payload.image || '',
+    };
+    linkPreviewCache.set(url, preview);
+    return preview;
+  }
+
+  async function insertInlineEmbedFromUrl(editor, block, urlText) {
+    const parsed = parseUrlSafe(urlText);
+    if (!parsed) return false;
+
+    const youtubeEmbedUrl = getYouTubeEmbedUrl(parsed);
+    if (youtubeEmbedUrl) {
+      const node = createYouTubeEmbedNode(youtubeEmbedUrl, parsed.href);
+      replaceBlockWithInlineEmbed(editor, block, node);
+      queueTelegramPreviewRefresh();
+      return true;
+    }
+
+    const pendingNode = createBookmarkNode({
+      url: parsed.href,
+      title: 'Loading preview...',
+      favicon: `${parsed.origin}/favicon.ico`,
+      image: '',
+      loading: true,
+    });
+
+    replaceBlockWithInlineEmbed(editor, block, pendingNode);
+    queueTelegramPreviewRefresh();
+
+    try {
+      const preview = await fetchLinkPreview(parsed.href);
+      const nextNode = createBookmarkNode({
+        url: preview.url || parsed.href,
+        title: preview.title || parsed.href,
+        favicon: preview.favicon,
+        image: preview.image,
+        loading: false,
+      });
+      pendingNode.replaceWith(nextNode);
+    } catch {
+      const fallbackNode = createBookmarkNode({
+        url: parsed.href,
+        title: parsed.hostname,
+        favicon: `${parsed.origin}/favicon.ico`,
+        image: '',
+        loading: false,
+      });
+      pendingNode.replaceWith(fallbackNode);
+    }
+
+    queueTelegramPreviewRefresh();
+    return true;
+  }
+
+  function setupEnterUrlEmbeds() {
+    const editor = document.getElementById('bodyEditor');
+    if (!editor) return;
+
+    editor.addEventListener('keydown', async (event) => {
+      if (event.key !== 'Enter' || event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) return;
+
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0 || !selection.isCollapsed) return;
+
+      const range = selection.getRangeAt(0);
+      if (!editor.contains(range.startContainer)) return;
+
+      const block = getCurrentEditorBlock(editor, range.startContainer);
+      const extracted = extractStandaloneUrlText(block, editor);
+      if (!extracted || !extracted.url) return;
+
+      event.preventDefault();
+      await insertInlineEmbedFromUrl(editor, block, extracted.url);
+    });
+  }
+
+  function linkifyUrlsInEditor() {
+    const editor = document.getElementById('bodyEditor');
+    if (!editor) return;
+
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node || !node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('a, code, pre, blockquote, [contenteditable="false"]')) return NodeFilter.FILTER_REJECT;
+        return /(https?:\/\/[^\s]+|www\.[^\s]+)/i.test(node.nodeValue)
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_REJECT;
+      }
+    });
+
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach((textNode) => {
+      const text = textNode.nodeValue || '';
+      const regex = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+      let lastIndex = 0;
+      let match;
+      const frag = document.createDocumentFragment();
+      let changed = false;
+
+      while ((match = regex.exec(text)) !== null) {
+        const start = match.index;
+        const rawMatch = match[0];
+        const clean = rawMatch.replace(/[),.;!?]+$/, '');
+        const href = normalizeUrlToken(clean);
+        if (!href) continue;
+
+        if (start > lastIndex) {
+          frag.appendChild(document.createTextNode(text.slice(lastIndex, start)));
+        }
+
+        const anchor = document.createElement('a');
+        anchor.href = href;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        anchor.textContent = clean;
+        frag.appendChild(anchor);
+
+        const trailing = rawMatch.slice(clean.length);
+        if (trailing) {
+          frag.appendChild(document.createTextNode(trailing));
+        }
+
+        lastIndex = start + rawMatch.length;
+        changed = true;
+      }
+
+      if (!changed) return;
+      if (lastIndex < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      }
+      textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+
+  /**
+   * Allowed tags and their allowed attributes for smart paste.
+   * Everything else is stripped. Inline styles are always removed.
+   */
+  const PASTE_ALLOWED_TAGS = {
+    'a': ['href', 'target', 'rel'],
+    'b': [],
+    'strong': [],
+    'i': [],
+    'em': [],
+    'u': [],
+    'blockquote': [],
+    'br': [],
+    'p': [],
+    'div': [],
+    'ul': [],
+    'ol': [],
+    'li': [],
+    'h1': [],
+    'h2': [],
+    'h3': [],
+    'h4': [],
+    'h5': [],
+    'h6': [],
+  };
+
+  /**
+   * Sanitize pasted HTML: strip all inline styles, classes, and non-semantic
+   * attributes while preserving structure (links, bold, italic, quotes, lists).
+   */
+  function sanitizePastedHtml(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return cleanNode(doc.body);
+  }
+
+  function cleanNode(node) {
+    let out = '';
+
+    for (const child of node.childNodes) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        out += escapeHtml(child.textContent);
+        continue;
+      }
+
+      if (child.nodeType !== Node.ELEMENT_NODE) continue;
+
+      const tag = child.tagName.toLowerCase();
+
+      // Google Docs wraps bold text in <span style="font-weight:700">
+      // Detect semantic intent from inline styles even on non-semantic tags
+      const computedBold = child.style && (
+        child.style.fontWeight === 'bold' ||
+        child.style.fontWeight === '700' ||
+        child.style.fontWeight === '800' ||
+        child.style.fontWeight === '900'
+      );
+      const computedItalic = child.style && child.style.fontStyle === 'italic';
+
+      const allowed = PASTE_ALLOWED_TAGS[tag];
+
+      if (allowed !== undefined) {
+        // Build clean opening tag with only allowed attributes
+        let attrs = '';
+        for (const attr of allowed) {
+          let val = child.getAttribute(attr);
+          if (val != null) {
+            // For links, ensure they have proper protocol
+            if (attr === 'href') {
+              val = val.trim();
+              if (!/^https?:\/\//i.test(val) && !/^mailto:/i.test(val)) {
+                val = 'https://' + val;
+              }
+            }
+            attrs += ` ${attr}="${escapeHtml(val)}"`;
+          }
+        }
+
+        // For <a> tags, always add target and rel if not present
+        if (tag === 'a') {
+          if (!child.getAttribute('target')) attrs += ' target="_blank"';
+          if (!child.getAttribute('rel')) attrs += ' rel="noopener noreferrer"';
+        }
+
+        const inner = cleanNode(child);
+
+        // Self-closing tags
+        if (tag === 'br') {
+          out += '<br>';
+          continue;
+        }
+
+        // Don't output empty block tags (except br)
+        if (!inner.trim() && ['p', 'div', 'blockquote', 'li', 'ul', 'ol', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
+          continue;
+        }
+
+        let wrapped = `<${tag}${attrs}>${inner}</${tag}>`;
+
+        // Wrap with semantic tags detected from inline styles
+        if (computedBold) wrapped = `<b>${wrapped}</b>`;
+        if (computedItalic) wrapped = `<i>${wrapped}</i>`;
+
+        out += wrapped;
+      } else {
+        // Tag not allowed — unwrap children, but detect semantic styles
+        let inner = cleanNode(child);
+        if (computedBold && inner.trim()) inner = `<b>${inner}</b>`;
+        if (computedItalic && inner.trim()) inner = `<i>${inner}</i>`;
+        out += inner;
+      }
+    }
+
+    return out;
+  }
+
+  function setupSmartPaste() {
+    const editor = document.getElementById('bodyEditor');
+    if (!editor) return;
+
+    editor.addEventListener('paste', (event) => {
+      const clipboardData = event.clipboardData;
+      if (!clipboardData) return;
+
+      const plainText = (clipboardData.getData('text/plain') || '').trim();
+      const htmlText = (clipboardData.getData('text/html') || '').trim();
+
+      // Case 1: Pasted text is a standalone URL — make it a link
+      const normalizedUrl = normalizeUrlToken(plainText);
+      if (normalizedUrl) {
+        event.preventDefault();
+        document.execCommand('insertHTML', false,
+          `<a href="${escapeHtml(normalizedUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(plainText)}</a>`
+        );
+        saveSelection();
+        queueTelegramPreviewRefresh();
+        return;
+      }
+
+      // Case 2: HTML content — sanitize it (strip styles, keep semantic tags)
+      if (htmlText) {
+        event.preventDefault();
+        const clean = sanitizePastedHtml(htmlText);
+        if (clean.trim()) {
+          document.execCommand('insertHTML', false, clean);
+        } else {
+          // Fallback to plain text if sanitization produced nothing
+          document.execCommand('insertText', false, plainText);
+        }
+        saveSelection();
+        queueTelegramPreviewRefresh();
+        return;
+      }
+
+      // Case 3: Plain text only — insert as plain text (no formatting)
+      if (plainText) {
+        event.preventDefault();
+        document.execCommand('insertText', false, plainText);
+        saveSelection();
+        queueTelegramPreviewRefresh();
+      }
+    });
+  }
+
+  setSendToTelegramState(false);
+  loadPostForEdit();
+  setupDragAndDrop();
+  setupSmartPaste();
+  setupEnterUrlEmbeds();
+</script>
+</body>
+</html>

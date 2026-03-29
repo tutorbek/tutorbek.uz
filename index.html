@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charSet="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tutorbek.com</title>
+    <meta name="description"
+        content="I build productivity apps (UstozShop, FolderifyLink, OdatAI and Postigram) and make content about building them." />
+    <meta name="og:image" content="static/assets/images/bekzod-avvatar.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap" />
+    <link rel="stylesheet" href="site.css" />
+    <link rel="icon" type="image/png" href="/static/assets/images/icons/javaicon.png" />
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 639px) {
+            .apps-container {
+                position: relative;
+                max-height: 108px;
+                overflow: hidden;
+                transition: max-height 0.4s ease;
+            }
+
+            .apps-container.expanded {
+                max-height: 800px;
+            }
+
+            .apps-container:not(.expanded)::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 68px;
+                background: linear-gradient(to bottom,
+                        rgba(255, 253, 241, 0) 0%,
+                        rgba(255, 253, 241, 0.55) 35%,
+                        rgba(255, 253, 241, 0.85) 65%,
+                        rgba(255, 253, 241, 1) 100%);
+                pointer-events: none;
+                z-index: 90;
+            }
+
+            .apps-toggle-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                margin: 6px 0 10px;
+                padding: 4px 8px;
+                border: none;
+                background: transparent;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: 'Inter', -apple-system, sans-serif;
+                font-size: 13px;
+                font-weight: 400;
+                color: #9ca3af;
+                letter-spacing: 0.01em;
+                -webkit-tap-highlight-color: transparent;
+                transition: background 0.2s, color 0.2s;
+            }
+
+            .apps-toggle-btn:hover,
+            .apps-toggle-btn:active {
+                background: rgba(0, 0, 0, 0.04);
+                color: #6b7280;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .apps-toggle-btn {
+                display: none !important;
+            }
+        }
+
+        /* About Me Modal */
+        .aboutme-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            animation: aboutme-fadein 0.25s ease;
+        }
+
+        .aboutme-overlay.open {
+            display: flex;
+        }
+
+        @keyframes aboutme-fadein {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .aboutme-modal {
+            background: #fffdf1;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 640px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+            position: relative;
+            animation: aboutme-slidein 0.3s ease;
+            padding: 40px 36px 36px;
+        }
+
+        @keyframes aboutme-slidein {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .aboutme-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #6b7280;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .aboutme-close:hover {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .aboutme-modal h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .aboutme-modal .aboutme-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 14px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .aboutme-modal p,
+        .aboutme-modal li {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.75;
+            color: #374151;
+        }
+
+        .aboutme-modal p {
+            margin-bottom: 14px;
+        }
+
+        .aboutme-modal h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 22px 0 10px;
+        }
+
+        .aboutme-modal ul {
+            list-style: disc;
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+
+        .aboutme-modal li {
+            margin-bottom: 6px;
+        }
+
+        .aboutme-modal a {
+            color: #2563eb;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .aboutme-modal a:hover {
+            color: #7c3aed;
+        }
+
+        .aboutme-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 20px 0;
+            border: none;
+        }
+
+        @media (max-width: 640px) {
+            .aboutme-modal {
+                padding: 28px 20px 24px;
+                border-radius: 14px;
+            }
+
+            .aboutme-modal h2 {
+                font-size: 22px;
+            }
+        }
+
+        /* ── Mini Music Player (Light Mode) ─────────────── */
+        .music-player {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 260px;
+            height: 130px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 14px 16px 12px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.06);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* top row: song + artist centred */
+        .mp-info {
+            text-align: center;
+            line-height: 1;
+        }
+
+        .music-player-song {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #111;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: -0.01em;
+        }
+
+        .music-player-artist {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 3px;
+        }
+
+        /* progress bar row */
+        .mp-progress-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .mp-progress-track {
+            position: relative;
+            width: 100%;
+            height: 14px;
+            background: transparent;
+            border-radius: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            touch-action: none;
+        }
+
+        .mp-progress-rail {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e2e2e2;
+            border-radius: 2px;
+        }
+
+        .mp-progress-fill {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.4s linear;
+        }
+
+        .mp-progress-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 11px;
+            height: 11px;
+            background: #fff;
+            border: 2px solid #222;
+            border-radius: 50%;
+            left: 0%;
+            transition: left 0.4s linear;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .mp-time-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 9.5px;
+            color: #aaa;
+            margin-top: 0;
+        }
+
+        /* bottom row: skip | play | skip | heart */
+        .mp-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .music-player-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, background 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .music-player-btn:hover {
+            background: #333;
+            transform: scale(1.07);
+        }
+
+        .music-player-btn:active {
+            transform: scale(0.94);
+        }
+
+        .mp-skip-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            transition: color 0.15s, background 0.15s;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mp-skip-btn:hover {
+            color: #444;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .mp-skip-btn:active {
+            transform: scale(0.9);
+        }
+
+        .mp-heart-btn {
+            position: absolute;
+            right: 0;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: #bbb;
+            transition: color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mp-heart-btn:hover {
+            color: #e55;
+        }
+
+        .mp-heart-btn.liked {
+            color: #e55;
+        }
+
+        /* Mobile: about-me and blog links — no button styling, just blue text */
+        @media (max-width: 639px) {
+
+            a.mobile-link-btn,
+            button.mobile-link-btn {
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                color: #2563eb !important;
+                font-size: inherit !important;
+                display: inline !important;
+                gap: 0 !important;
+            }
+
+            a.mobile-link-btn:hover,
+            button.mobile-link-btn:hover {
+                color: #7c3aed !important;
+            }
+
+            .mobile-link-btn .text-sm {
+                display: inline !important;
+                font-size: inherit !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex flex-col pt-8 p-6 sm:pt-10 sm:p-8 w-full items-center mt-0 sm:mt-0">
+        <div class="flex flex-row items-center justify-center w-full max-w-2xl gap-20">
+            <div class="flex flex-col items-start gap-6 w-full">
+                <!-- Avatar + Music Player side by side on desktop, stacked on mobile -->
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 w-full max-w-[100vw]">
+                    <img src="static/assets/images/bekzod-avvatar2.jpg" alt="Avatar" class="object-cover flex-shrink-0"
+                        style="width:130px;height:130px; border-radius: 18%;" />
+
+                    <!-- Mini Music Player -->
+                    <div class="music-player" id="musicPlayer">
+
+                        <!-- Title & Artist -->
+                        <div class="mp-info">
+                            <div class="music-player-song" id="mpSong">Yengilma Tur</div>
+                            <div class="music-player-artist" id="mpArtist">Konsta</div>
+                        </div>
+
+                        <!-- Progress bar -->
+                        <div class="mp-progress-wrap">
+                            <div class="mp-progress-track" id="mpTrack">
+                                <div class="mp-progress-rail"></div>
+                                <div class="mp-progress-fill" id="mpFill"></div>
+                                <div class="mp-progress-thumb" id="mpThumb"></div>
+                            </div>
+                            <div class="mp-time-row">
+                                <span id="mpElapsed">0:00</span>
+                                <span id="mpDuration">0:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Controls: -10s | play | +10s | heart -->
+                        <div class="mp-controls-row">
+                            <button class="mp-skip-btn" onclick="mpSkip(-10)" aria-label="Rewind 10 seconds">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="1 4 1 10 7 10" />
+                                    <path d="M3.51 15a9 9 0 1 0 .49-3" />
+                                    <text x="12" y="14" text-anchor="middle" font-size="6" fill="currentColor"
+                                        stroke="none" font-family="Inter,sans-serif" font-weight="700">10</text>
+                                </svg>
+                            </button>
+                            <button class="music-player-btn" id="mpBtn" onclick="mpToggle()" aria-label="Play/Pause">
+                                <svg id="mpPlayIcon" width="11" height="11" viewBox="0 0 24 24">
+                                    <polygon points="6,3 20,12 6,21" fill="white" />
+                                </svg>
+                                <svg id="mpPauseIcon" width="11" height="11" viewBox="0 0 24 24" style="display:none;">
+                                    <rect x="5" y="3" width="4" height="18" fill="white" rx="1" />
+                                    <rect x="15" y="3" width="4" height="18" fill="white" rx="1" />
+                                </svg>
+                            </button>
+                            <button class="mp-skip-btn" onclick="mpSkip(10)" aria-label="Skip 10 seconds">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 4 23 10 17 10" />
+                                    <path d="M20.49 15a9 9 0 1 1-.49-3" />
+                                    <text x="12" y="14" text-anchor="middle" font-size="6" fill="currentColor"
+                                        stroke="none" font-family="Inter,sans-serif" font-weight="700">10</text>
+                                </svg>
+                            </button>
+                            <button class="mp-heart-btn" id="mpHeart" onclick="mpLike()" aria-label="Like">
+                                <svg id="mpHeartIcon" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <audio id="mpAudio" preload="none"
+                            src="https://quvonch.com/uploads/files/2018-03/1522500381_konsta-yengilma-tur.mp3">
+                        </audio>
+                    </div>
+
+                </div>
+
+                <div class="mt-10 text-gray-800 text-2xl font-light flex flex-col items-start gap-4">
+                    <span class="mb-10 flex flex-col sm:flex-row items-start sm:items-center gap-2">Hi, my name is
+                        Bekzod. I'm T-Shaped backend developer.
+                    </span>
+
+                    <span
+                        class="inline-flex relative group items-start flex-col sm:flex-row sm:items-center gap-2 mb-10">I
+                        build apps and profit
+
+                        <span
+                            class="apps-container flex flex-col gap-2 sm:inline-flex sm:flex-row sm:gap-1.5 relative group/apps w-full sm:w-auto"
+                            id="appsContainer">
+
+                            <a href="https://donatello.uz" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/donatello flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/DonatelloLogoLittle.png" alt="Donatello"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-10 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">Donatello - Cheap donation service</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/donatello:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">Donatello
+                                    - Cheap donation service</span>
+                            </a>
+
+                            <a href="https://ustoz.shop" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/ustozshop flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/ustozshop.png" alt="UstozShop"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:rotate-3 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-20 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">UstozShop - A better teacher shop</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/ustozshop:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">UstozShop
+                                    - A better teacher shop</span>
+                            </a>
+
+                            <a href="https://folderify.app" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/folderify flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/folderifylinklogo.png" alt="FolderifyLink"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-30 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">FolderifyLink - A better bookmark
+                                    app</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/folderify:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">FolderifyLink
+                                    - A better bookmark app</span>
+                            </a>
+
+                            <a href="https://bozorly.uz" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/bozorly flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/bozorlyNoteLogo.png" alt="Bozorly"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-40 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">Bozorly – Remember Everything in
+                                    Market</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/bozorly:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">Bozorly
+                                    – Remember Everything in Market</span>
+                            </a>
+
+                            <!-- <a href="https://t.me/odataibot" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/odatai flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/odatai.png" alt="OdatAI"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-50 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">OdatAI - A better habit tracker app</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/odatai:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">OdatAI
+                                    - A better habit tracker app</span>
+                            </a> -->
+
+                            <a href="https://asklify.me" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/asklify flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/asklifylogo.png" alt="AsklifyMe"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:rotate-3 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-60 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">AsklifyMe - Ask questions to
+                                    professionals</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/asklify:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">AsklifyMe
+                                    - Ask questions to professionals</span>
+                            </a>
+
+                            <!-- <a href="https://postigram.app" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/postigram flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/postigramlogo2.png" alt="Postigram"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-70 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">Postigram - Write accurate</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/postigram:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">Postigram
+                                    - Write accurate</span>
+                            </a> -->
+
+                            <!-- <a href="https://t.me/epchilrobot" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/epchil flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/epchilrobotlogo.png" alt="Epchilrobot"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-80 rounded-xl cursor-pointer sm:border sm:border-gray-200 sm:shadow-sm" />
+                                <span class="text-sm text-gray-600 sm:hidden">Epchilrobot - Your best assistant</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/epchil:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">Epchilrobot
+                                    - Your best assistant</span>
+                            </a> -->
+
+                        </span>
+                        <button class="apps-toggle-btn" id="appsToggleBtn" onclick="toggleApps()">
+                            <span id="appsToggleText">View all my projects ↓</span>
+                        </button>
+                    </span>
+
+                    <span
+                        class="mb-10 inline-flex relative group items-start flex-col sm:flex-row sm:items-center gap-2"><span>and
+                            make YouTube videos about building/coding</span>
+                        <a href="https://youtube.com/@tutorbek" target="_blank" rel="noopener noreferrer"
+                            class="relative group flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                            <img src="https://cdn2.iconfinder.com/data/icons/2018-social-media-app-logos/1000/2018_social_media_popular_app_logo_youtube-512.png"
+                                alt="YouTube"
+                                class="w-8 h-8 sm:w-10 sm:h-10 inline-block align-middle rounded-xl cursor-pointer sm:rotate-6 sm:hover:rotate-0 transition-all duration-200" />
+                            <span class="text-sm text-gray-600 sm:hidden">youtube.com/@tutorbek</span>
+                            <span
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">@tutorbek</span>
+                        </a>
+                    </span>
+
+                    <span
+                        class="mb-10 inline-flex relative group items-start flex-col sm:flex-row sm:items-center gap-2">
+                        <span>If you're interested</span>
+                        <button onclick="openAboutMe()"
+                            class="mobile-link-btn flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0 text-blue-600 hover:text-purple-600 transition-colors cursor-pointer"
+                            style="background:transparent;font:inherit;">
+                            <span class="text-sm sm:hidden">about me</span>
+                            <span class="hidden sm:inline">about me</span>
+                        </button>
+                    </span>
+
+                    <span
+                        class="inline-flex relative group items-start flex-col sm:flex-row sm:items-center gap-2"><span>If
+                            you are interested in the articles I write</span>
+                        <a href="./blog/index.html" rel="noopener noreferrer"
+                            class="mobile-link-btn flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0 text-blue-600 hover:text-purple-600 transition-colors">
+                            <span class="text-sm sm:hidden">tutorbek.com/blog</span>
+                            <span class="hidden sm:inline">blogs</span>
+                        </a>
+                    </span>
+                    <span
+                        class="inline-flex relative group items-start flex-col sm:flex-row sm:items-center gap-2 mt-10"><span>I
+                            also post regularly on these platforms</span>
+                        <span
+                            class="flex flex-col gap-2 sm:inline-flex sm:flex-row sm:gap-1.5 relative group/socialmedia w-full sm:w-auto">
+
+                            <a href="https://twitter.com/tutorbek" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/twitter flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/X_logo.jpg/1200px-X_logo.jpg"
+                                    alt="Twitter"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-10 rounded-xl cursor-pointer" />
+                                <span class="text-sm text-gray-600 sm:hidden">x.com/tutorbek</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/twitter:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">@tutorbek</span>
+                            </a>
+
+                            <a href="https://instagram.com/tutorbek" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/instagram flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg"
+                                    alt="Instagram"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:rotate-3 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-20 rounded-xl cursor-pointer" />
+                                <span class="text-sm text-gray-600 sm:hidden">instagram.com/tutorbek</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/instagram:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">@tutorbek</span>
+                            </a>
+
+                            <a href="https://t.me/tutorbek" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/telegram flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="static/assets/images/icons/telegram.svg" alt="Telegram"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-30 rounded-xl cursor-pointer" />
+                                <span class="text-sm text-gray-600 sm:hidden">t.me/tutorbek</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/telegram:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">@tutorbek</span>
+                            </a>
+
+                            <a href="https://www.tiktok.com/@tutorbek" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/tiktok flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="https://thumbs.dreamstime.com/b/tiktok-social-media-app-icon-tiktok-social-media-app-icon-square-shape-vector-illustration-269930887.jpg"
+                                    alt="TikTok"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-40 rounded-xl cursor-pointer" />
+                                <span class="text-sm text-gray-600 sm:hidden">tiktok.com/@tutorbek</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/tiktok:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">@tutorbek</span>
+                            </a>
+
+                            <a href="https://www.linkedin.com/in/tutorbek" target="_blank" rel="noopener noreferrer"
+                                class="relative group group/linkedin flex items-center gap-3 px-3 py-2 rounded-xl border border-gray-200 shadow-sm sm:border-0 sm:shadow-none sm:p-0 sm:rounded-none sm:gap-0">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRokEYt0yyh6uNDKL8uksVLlhZ35laKNQgZ9g&amp;s"
+                                    alt="LinkedIn"
+                                    class="w-8 h-8 sm:w-10 sm:h-10 sm:transform sm:-rotate-6 sm:group-hover:rotate-0 sm:group-hover:translate-x-0 sm:translate-x-2 transition-all duration-200 relative z-50 rounded-xl cursor-pointer" />
+                                <span class="text-sm text-gray-600 sm:hidden">linkedin.com/in/tutorbek</span>
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2.5 py-1 rounded-xl bg-opacity-80 text-xs opacity-0 sm:group-hover/linkedin:opacity-100 transition-opacity whitespace-nowrap hidden sm:block">@tutorbek</span>
+                            </a>
+
+                        </span>
+                    </span><span
+                        class="inline-flex relative group items-start flex-col sm:flex-row sm:items-center gap-2 mt-8"><span>Curious
+                            about my tech stack?
+                            <a href="tools.html" rel="noopener noreferrer"
+                                class="text-blue-600 hover:text-purple-600 transition-colors">Click
+                                here.</a></span></span>
+                    <div class="w-full flex items-center justify-center my-4 relative">
+                        <img src="static/assets/images/icons/animegirlicon.png" alt=""
+                            class="w-16 h-16 relative z-10" />
+                    </div>
+
+                    <span class="inline-flex flex-col relative group items-center gap-2 text-lg w-full">
+                        <span>:)Want to donate my coffee?</span>
+                        <span class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full justify-center">
+                            <a href="https://tirikchilik.uz/tutorbek" target="_blank" rel="noopener noreferrer"
+                                class="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 shadow-sm text-blue-600 hover:text-purple-600 transition-colors w-full sm:w-auto justify-center">
+                                <span class="text-lg">☕</span>
+                                <span class="text-sm">Thanks brodar🫡</span>
+                            </a>
+                            <a href="https://t.me/bkzd19" target="_blank" rel="noopener noreferrer"
+                                class="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 shadow-sm text-blue-600 hover:text-purple-600 transition-colors w-full sm:w-auto justify-center">
+                                <span class="text-lg">💬</span>
+                                <span class="text-sm">Want to say hi? 👋</span>
+                            </a>
+                        </span>
+                        <span class="mt-2">If you are me <a href="/login" rel="noopener noreferrer"
+                                class="text-blue-600 hover:text-purple-600 transition-colors">login</a>:)</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Me Modal -->
+    <div class="aboutme-overlay" id="aboutMeOverlay">
+        <div class="aboutme-modal" id="aboutMeModal">
+            <button class="aboutme-close" onclick="closeAboutMe()" title="Close" aria-label="Close">&#x2715;</button>
+            <img src="static/assets/images/bekzod-avvatar2.jpg" alt="Bekzod" class="aboutme-avatar" />
+            <h2>About Me</h2>
+            <p>
+                Hi! I'm o‘sha-o‘sha <strong>Bekzod</strong> 😄<br>
+                2001-yil 12-fevralda tug‘ilganman — qisqasi, millenial ham emasman, to‘liq Z ham emasman,
+                o‘rtada qolgan <em>“update kerak”</em> versiyaman.
+            </p>
+
+            <p>
+                Hayotda kasbni ancha marta almashtirganman — resumeni ochsangiz, xuddi test projectlar
+                ro‘yxatiga o‘xshaydi. Qisqasi, “nima bo‘lsam ekan?” degan savolni ko‘p marotaba deploy
+                qilganman, lekin oxiri bitta <strong>stable release</strong> chiqdi: dasturchiman 💻
+            </p>
+
+            <p>
+                Hozir backend tomonlarda yuraman. Kod yozaman, buglar bilan gaplashaman, ba’zida ular yutadi,
+                ba’zida men. <strong>Spring Boot</strong>, <strong>microservice</strong>, <strong>architecture</strong>
+                —
+                bularni shunchaki ishlatmayman, ichida yashayman desam ham bo‘ladi. Ba’zida o‘zim yozgan kodni
+                o‘zim tushunmay qolaman — lekin bu ham professionallik belgisi deyishadi 😂
+            </p>
+
+            <p>
+                Frontendga ham kirib chiqaman — “hamma narsadan oz-oz” tipidagi odam. Ya’ni backendchi bo‘lsam ham,
+                UI buzilib qolsa, “bu kim qilgan?” deb qarab turmayman, o‘zim ham buzaman 😄
+            </p>
+
+            <p>
+                AI tool’lar bilan ishlayman — qisqasi, dangasa emasman, lekin ishni aqlli qilish tarafdoriman.
+                Nega 2 soat o‘tirib yozaman, agar 20 minutda chiqarish imkoni bo‘lsa?
+            </p>
+
+            <p>
+                Hozirgi reja oddiy: shu IT sohasida qolish, o‘sish, kuchayish. Balki startup qilarman,
+                balki katta sistemalar qurarman — lekin aniq narsa: endi kasbni yana almashtirish niyati yo‘q,
+                bu safar <strong>“commit”</strong> qilingan 😎
+            </p>
+
+            <p>
+                Qisqasi, oddiy bola: choy ichadi, kod yozadi, ba’zida hayotni debug qiladi.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        /* ── Mini Music Player ── */
+        function mpToggle() {
+            var audio = document.getElementById('mpAudio');
+            var play = document.getElementById('mpPlayIcon');
+            var pause = document.getElementById('mpPauseIcon');
+            if (audio.paused) {
+                audio.play();
+                play.style.display = 'none';
+                pause.style.display = 'block';
+            } else {
+                audio.pause();
+                play.style.display = 'block';
+                pause.style.display = 'none';
+            }
+        }
+
+        function mpFmt(s) {
+            var m = Math.floor(s / 60);
+            var sec = Math.floor(s % 60);
+            return m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        function mpSeek(e) {
+            var audio = document.getElementById('mpAudio');
+            var track = document.getElementById('mpTrack');
+            var rect = track.getBoundingClientRect();
+            var clientX = (e.touches && e.touches.length) ? e.touches[0].clientX :
+                (e.changedTouches && e.changedTouches.length) ? e.changedTouches[0].clientX :
+                    e.clientX;
+            var pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            if (audio.duration) audio.currentTime = pct * audio.duration;
+        }
+
+        function mpSkip(seconds) {
+            var audio = document.getElementById('mpAudio');
+            if (!audio.duration) return;
+            audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + seconds));
+        }
+
+        function mpLike() {
+            var btn = document.getElementById('mpHeart');
+            var svg = document.getElementById('mpHeartIcon');
+            btn.classList.toggle('liked');
+            var on = btn.classList.contains('liked');
+            svg.setAttribute('fill', on ? 'currentColor' : 'none');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var audio = document.getElementById('mpAudio');
+            var track = document.getElementById('mpTrack');
+            if (!audio || !track) return;
+
+            audio.addEventListener('loadedmetadata', function () {
+                document.getElementById('mpDuration').textContent = mpFmt(audio.duration);
+            });
+
+            audio.addEventListener('timeupdate', function () {
+                if (!audio.duration) return;
+                var pct = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('mpFill').style.width = pct + '%';
+                document.getElementById('mpThumb').style.left = pct + '%';
+                document.getElementById('mpElapsed').textContent = mpFmt(audio.currentTime);
+            });
+
+            audio.addEventListener('ended', function () {
+                document.getElementById('mpPlayIcon').style.display = 'block';
+                document.getElementById('mpPauseIcon').style.display = 'none';
+                document.getElementById('mpFill').style.width = '0%';
+                document.getElementById('mpThumb').style.left = '0%';
+                document.getElementById('mpElapsed').textContent = '0:00';
+            });
+
+            /* ── Touch & Mouse seek on progress track ── */
+            function seekFromEvent(e) {
+                var rect = track.getBoundingClientRect();
+                var clientX = (e.touches && e.touches.length) ? e.touches[0].clientX :
+                    (e.changedTouches && e.changedTouches.length) ? e.changedTouches[0].clientX :
+                        e.clientX;
+                var pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                if (audio.duration) audio.currentTime = pct * audio.duration;
+            }
+
+            var dragging = false;
+
+            track.addEventListener('mousedown', function (e) {
+                dragging = true;
+                seekFromEvent(e);
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', function (e) {
+                if (dragging) seekFromEvent(e);
+            });
+            document.addEventListener('mouseup', function () { dragging = false; });
+
+            track.addEventListener('touchstart', function (e) {
+                seekFromEvent(e);
+                e.preventDefault();
+            }, { passive: false });
+            track.addEventListener('touchmove', function (e) {
+                seekFromEvent(e);
+                e.preventDefault();
+            }, { passive: false });
+        });
+
+
+        function toggleApps() {
+            const container = document.getElementById('appsContainer');
+            const btn = document.getElementById('appsToggleBtn');
+            const text = document.getElementById('appsToggleText');
+            const isExpanded = container.classList.toggle('expanded');
+            btn.classList.toggle('expanded', isExpanded);
+            text.textContent = isExpanded ? 'Hide all my projects ↑' : 'View all my projects ↓';
+        }
+
+        function openAboutMe() {
+            document.getElementById('aboutMeOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAboutMe() {
+            document.getElementById('aboutMeOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Close on clicking outside the modal
+        document.getElementById('aboutMeOverlay').addEventListener('click', function (e) {
+            if (e.target === this) closeAboutMe();
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.getElementById('aboutMeOverlay').classList.contains('open')) {
+                closeAboutMe();
+            }
+        });
+    </script>
+</body>
+
+</html>

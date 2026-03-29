@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Blog | Tutorbek.com</title>
+    <meta name="description" content="Tutorbek.com — shaxsiy blog"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@200;300;400;500;600&display=swap"
+          rel="stylesheet"/>
+    <meta name="author" content="Bekzod">
+    <meta property="og:site_name" content="Tutorbek's Blog"/>
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="/site.css"/>
+    <link rel="icon" type="image/png" href="/static/assets/images/icons/javaicon.png" />
+</head>
+
+<body>
+
+<main class="blog-wrap blog-wrap--archive">
+    <div id="archive">
+
+        <div class="back-row">
+            <a href="../index.html" class="text-gray-600 hover:text-gray-800 transition-colors inline-block text-lg" aria-label="Back">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+</a>
+        </div>
+
+        <div id="postsStatus" class="text-gray-500" style="margin: 12px 0;"></div>
+        <div id="postsList"></div>
+    </div>
+
+    <aside class="sidebar" id="telegramCta" hidden>
+        <div>
+            <a href="https://t.me/tutorbek" target="_blank" class="tg-btn" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.5 2.5L1.5 10.5L7.5 13.5L10.5 21.5L12 20L9 14L22.5 2.5Z" fill="currentColor"/>
+                </svg>
+                Telegram kanalga o'tish
+            </a>
+        </div>
+    </aside>
+</main>
+
+<script defer>
+    const postsList = document.getElementById("postsList");
+    const statusEl = document.getElementById("postsStatus");
+    const backRow = document.querySelector("#archive .back-row");
+    const telegramCta = document.getElementById("telegramCta");
+
+    const escapeHtml = (str = "") => str.replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+    }[ch]));
+
+    const monthName = (isoDate) => {
+        const dt = new Date(isoDate);
+        if (Number.isNaN(dt.getTime())) return "";
+        return dt.toLocaleString("en-US", { month: "long" });
+    };
+
+    const yearValue = (isoDate) => {
+        const dt = new Date(isoDate);
+        if (Number.isNaN(dt.getTime())) return "";
+        return String(dt.getFullYear());
+    };
+
+    const groupPosts = (posts) => {
+        const ordered = [...posts].sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+        const groups = [];
+
+        ordered.forEach((post) => {
+            const year = yearValue(post.isoDate);
+            const month = monthName(post.isoDate);
+            const last = groups[groups.length - 1];
+
+            if (!last || last.year !== year || last.month !== month) {
+                groups.push({ year, month, posts: [post] });
+                return;
+            }
+
+            last.posts.push(post);
+        });
+
+        return groups;
+    };
+
+    const normalizeHref = (href = "") => {
+        const cleaned = String(href).trim();
+        if (!cleaned) return "#";
+        if (cleaned.endsWith("/index.html")) {
+            return `${cleaned.slice(0, -"/index.html".length)}/`;
+        }
+        return cleaned.endsWith("/") ? cleaned : `${cleaned}/`;
+    };
+
+    const renderPosts = (archiveGroups) => {
+        if (!archiveGroups.length) {
+            statusEl.textContent = "Postlar topilmadi.";
+            postsList.innerHTML = "";
+            return;
+        }
+
+        statusEl.textContent = "";
+        let currentYear = "";
+
+        postsList.innerHTML = archiveGroups.map(({ year, month, posts }) => {
+            const yearBlock = year !== currentYear
+                ? `<div class="year-label mono">${escapeHtml(year)}</div>`
+                : "";
+            currentYear = year;
+
+            return `
+                <div class="year-block">
+                    ${yearBlock}
+                    ${month ? `<div class="month-label mono">${escapeHtml(month)}</div>` : ""}
+                    <ul class="post-list">
+                        ${posts.map((post) => `
+                            <li>
+                                <a href="${escapeHtml(normalizeHref(post.href))}" class="post-row">
+                                    <span class="post-title">${escapeHtml(post.title)}</span>
+                                    <span class="post-date mono">${escapeHtml(post.date)}</span>
+                                </a>
+                            </li>
+                        `).join("")}
+                    </ul>
+                </div>
+            `;
+        }).join("");
+    };
+
+    async function setupNewPostButton() {
+        if (!backRow) return;
+
+        try {
+            const response = await fetch("/api/auth/status", {
+                credentials: "same-origin",
+            });
+            if (!response.ok) return;
+
+            const payload = await response.json().catch(() => ({}));
+            const isAuthenticated = Boolean(payload.authenticated);
+
+            if (telegramCta) {
+                telegramCta.hidden = isAuthenticated;
+            }
+
+            if (!isAuthenticated) return;
+
+            backRow.classList.add("back-row--with-edit");
+            const newPostLink = document.createElement("a");
+            newPostLink.href = "/blog/createpost";
+            newPostLink.className = "edit-post-btn";
+            newPostLink.textContent = "New Post";
+            backRow.appendChild(newPostLink);
+        } catch {
+            // Keep CTA hidden when auth status is unknown to avoid showing it to logged-in users.
+        }
+    }
+
+    async function loadPosts() {
+        statusEl.textContent = "Yuklanmoqda...";
+
+        try {
+            const response = await fetch("./posts.json");
+            if (!response.ok) {
+                throw new Error("Post list yuklanmadi");
+            }
+
+            const posts = await response.json();
+            if (!Array.isArray(posts)) {
+                throw new Error("Post list formati noto'g'ri");
+            }
+
+            renderPosts(groupPosts(posts));
+        } catch (error) {
+            postsList.innerHTML = "";
+            statusEl.textContent = "Error: " + (error.message || "Noma'lum xatolik");
+        }
+    }
+
+    setupNewPostButton();
+    loadPosts();
+</script>
+<script src="/site.js" defer></script>
+</body>
+
+</html>

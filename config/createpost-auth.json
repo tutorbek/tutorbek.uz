@@ -1,0 +1,8 @@
+{
+  "algorithm": "pbkdf2",
+  "digest": "sha256",
+  "iterations": 120000,
+  "keylen": 32,
+  "salt": "b09797e9a4ce131dc521416e7b98cd45",
+  "hash": "6bf413236a98c86591a2cd29a17c0c6a79ed40d31a8524450c096826aa0e3336"
+}

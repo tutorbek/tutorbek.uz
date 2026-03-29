@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is Lorem Ipsum??</title>
+    <meta name="author" content="Bekzod">
+    <meta property="og:site_name" content="Tutorbek's Blog"/>
+    <meta property="og:description" content="Lorem Ipsum&amp;nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" type="image/png" href="/static/assets/images/icons/javaicon.png"/>
+    <link rel="stylesheet" href="/site.css"/>
+</head>
+
+<body>
+
+<div class="progress-bar">
+    <div class="bar"></div>
+</div>
+
+<main class="blog-wrap blog-wrap--post">
+    <div id="archive">
+        <div class="back-row">
+            <a href="../index.html" class="text-gray-600 hover:text-gray-800 transition-colors inline-block text-lg" aria-label="Back">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+</a>
+        </div>
+    </div>
+
+    <div class="article-header">
+        <h1 class="title">What is Lorem Ipsum??</h1>
+        <div class="date">
+            <span>28 March, 2026 · 07:02 PM</span>
+        </div>
+    </div>
+
+    <article class="content">
+        <p>Lorem Ipsum&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p><p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    </article>
+</main>
+
+<script>
+    var progressBar = document.querySelector('.progress-bar .bar');
+    if (progressBar) {
+        window.addEventListener('scroll', function () {
+            var pixelScrolled = window.scrollY;
+            var viewportHeight = window.innerHeight;
+            var totalHeight = document.body.scrollHeight;
+            progressBar.style.width = (pixelScrolled / (totalHeight - viewportHeight)) * 100 + '%';
+        });
+    }
+</script>
+<script src="/site.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <style>
+    body { font-family: Inter, -apple-system, sans-serif; background: #f8fafc; margin: 0; }
+    .card { max-width: 420px; margin: 14vh auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 20px; }
+    p { margin: 0 0 16px; color: #475569; }
+    input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; box-sizing: border-box; }
+    button { margin-top: 12px; width: 100%; padding: 12px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; font-size: 14px; cursor: pointer; }
+    button:disabled { background: #93c5fd; cursor: not-allowed; }
+    .status { margin-top: 10px; color: #dc2626; min-height: 20px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Login</h1>
+    <p>Enter password to continue.</p>
+    <div>
+      <input id="password" type="password" placeholder="Parol" autocomplete="current-password" />
+      <button id="loginBtn" onclick="doLogin()">Kirish</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    // "next" parametrini URL dan olish
+    function getNextPath() {
+      const params = new URLSearchParams(window.location.search);
+      const next = params.get("next") || "/blog/createpost";
+      // Faqat relative path ruxsat beriladi (xavfsizlik uchun)
+      if (/^https?:\/\//i.test(next)) return "/blog/createpost";
+      return next;
+    }
+
+    // Xato ko'rsatish
+    if (new URLSearchParams(window.location.search).get("auth") === "failed") {
+      document.getElementById("status").textContent = "Parol noto'g'ri";
+    }
+
+    // Enter tugmasi bilan yuborish
+    document.getElementById("password").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") doLogin();
+    });
+
+    async function doLogin() {
+      const password = document.getElementById("password").value.trim();
+      const btn = document.getElementById("loginBtn");
+      const statusEl = document.getElementById("status");
+
+      if (!password) {
+        statusEl.textContent = "Parolni kiriting";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Tekshirilmoqda...";
+      statusEl.textContent = "";
+
+      try {
+        // Backend serverga (tutorbek.com) so'rov yuborish
+        const res = await fetch("https://tutorbek.com/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // cookie saqlash uchun
+          body: JSON.stringify({
+            password: password,
+            next: getNextPath(),
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+          // Muvaffaqiyatli — backend serverga yo'naltirish
+          window.location.href = data.next || "/blog/createpost";
+          console.log('Login successful, redirecting to:');
+        } else {
+          statusEl.textContent = data.error || "Parol noto'g'ri";
+          btn.disabled = false;
+          btn.textContent = "Kirish";
+        }
+      } catch (err) {
+        statusEl.textContent = "Server bilan bog'lanib bo'lmadi";
+        btn.disabled = false;
+        btn.textContent = "Kirish";
+      }
+    }
+  </script>
+</body>
+</html>
